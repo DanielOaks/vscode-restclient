@@ -1,7 +1,7 @@
 {
-  "name": "rest-client",
-  "displayName": "REST Client",
-  "description": "REST Client for Visual Studio Code",
+  "name": "rest-client-do",
+  "displayName": "REST Client (do)",
+  "description": "REST Client (do) for Visual Studio Code",
   "version": "0.27.0",
   "publisher": "DanielOaks",
   "author": {
@@ -15,13 +15,13 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Huachao/vscode-restclient/issues",
+    "url": "https://github.com/DanielOaks/vscode-restclient/issues",
     "email": "huachaomao@gmail.com"
   },
-  "homepage": "https://github.com/Huachao/vscode-restclient/blob/master/README.md",
+  "homepage": "https://github.com/DanielOaks/vscode-restclient/blob/master/README.md",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Huachao/vscode-restclient.git"
+    "url": "https://github.com/DanielOaks/vscode-restclient.git"
   },
   "engines": {
     "vscode": "^1.81.0"
