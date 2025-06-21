@@ -2,11 +2,11 @@
   "name": "rest-client",
   "displayName": "REST Client",
   "description": "REST Client for Visual Studio Code",
-  "version": "0.26.0",
-  "publisher": "humao",
+  "version": "0.27.0",
+  "publisher": "DanielOaks",
   "author": {
-    "name": "Huachao Mao",
-    "email": "huachaomao@gmail.com"
+    "name": "Daniel Oaks",
+    "email": "daniel@danieloaks.net"
   },
   "icon": "images/rest_icon.png",
   "galleryBanner": {
