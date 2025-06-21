@@ -13,7 +13,7 @@ import { awsSignature } from './auth/awsSignature';
 import { digest } from './auth/digest';
 import { MimeUtility } from './mimeUtility';
 import { getHeader, removeHeader } from './misc';
-import { convertBufferToStream, convertStreamToBuffer } from './streamUtility';
+import { convertStreamToBuffer } from './streamUtility';
 import { UserDataManager } from './userDataManager';
 import { getCurrentHttpFileName, getWorkspaceRootPath } from './workspaceUtility';
 
@@ -80,8 +80,6 @@ export class HttpClient {
         // adjust response header case, due to the response headers in nodejs http module is in lowercase
         const responseHeaders: ResponseHeaders = HttpClient.normalizeHeaderNames(response.headers, response.rawHeaders);
 
-        const requestBody = options.body;
-
         return new HttpResponse(
             response.statusCode,
             response.statusMessage!,
@@ -98,7 +96,7 @@ export class HttpClient {
                 HttpClient.normalizeHeaderNames(
                     (response as any).request.options.headers as RequestHeaders,
                     Object.keys(httpRequest.headers)),
-                Buffer.isBuffer(requestBody) ? convertBufferToStream(requestBody) : requestBody,
+                httpRequest.body,
                 httpRequest.rawBody,
                 httpRequest.name
             ));
@@ -132,7 +130,9 @@ export class HttpClient {
             decompress: true,
             followRedirect: settings.followRedirect,
             throwHttpErrors: false,
-            retry: 0,
+            retry: {
+                limit: 0,
+            },
             hooks: {
                 afterResponse: [],
                 beforeRequest: [],
@@ -143,7 +143,9 @@ export class HttpClient {
         };
 
         if (settings.timeoutInMilliseconds > 0) {
-            options.timeout = settings.timeoutInMilliseconds;
+            options.timeout = {
+                request: settings.timeoutInMilliseconds
+            };
         }
 
         if (settings.rememberCookiesForSubsequentRequests) {
