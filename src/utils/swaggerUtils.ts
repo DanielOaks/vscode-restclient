@@ -28,9 +28,13 @@ export class SwaggerUtils {
             const content = details.requestBody.content;
             for (const content_type in content) {
                 const exampleObject = this.getExampleObjectFromSchema(components, content[content_type].schema);
+                const exampleObjectBody = JSON.stringify(exampleObject, null, 2);
                 operationBlock += `${operation.toUpperCase()} ${baseUrl}${endpoint} HTTP/1.1\n`;
                 operationBlock += `Content-Type: ${content_type}\n`;
-                operationBlock += `${JSON.stringify(exampleObject, null, 2)}\n\n`;
+                if (exampleObjectBody) {
+                    operationBlock += `\n${exampleObjectBody}`
+                }
+                operationBlock += `\n\n`;
             }
         } else {
             operationBlock += `${operation.toUpperCase()} ${baseUrl}${endpoint} HTTP/1.1\n`;
