@@ -2,7 +2,7 @@
   "name": "rest-client-do",
   "displayName": "REST Client (do)",
   "description": "REST Client (do) for Visual Studio Code",
-  "version": "0.27.1",
+  "version": "0.27.2",
   "publisher": "DanielOaks",
   "author": {
     "name": "Daniel Oaks",
