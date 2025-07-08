@@ -4,6 +4,8 @@ REST Client allows you to send HTTP request and view the response in Visual Stud
 
 ## (do) Fork changes from the original REST Client
 - Variables can be loaded from `http-client.env.json` files sitting alongside the `.http` file.
+- Updated dependencies.
+- Removed all telemetry.
 
 ## Main Features
 * Send/Cancel/Rerun __HTTP request__ in editor and view response in a separate pane with syntax highlight
