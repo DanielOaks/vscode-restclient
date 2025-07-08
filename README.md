@@ -4,6 +4,7 @@ REST Client allows you to send HTTP request and view the response in Visual Stud
 
 ## (do) Fork changes from the original REST Client
 - Variables can be loaded from `http-client.env.json` files sitting alongside the `.http` file.
+- `{{$randomName}}` and `{{$randomAlpha}}` / `{{$randomAlpha lengthInteger}}` system variables.
 - Updated dependencies.
 - Removed all telemetry.
 
@@ -37,6 +38,8 @@ REST Client allows you to send HTTP request and view the response in Visual Stud
     - Provide system dynamic variables
       + `{{$guid}}`
       + `{{$randomInt min max}}`
+      + `{{$randomAlpha length}}` (defaults to 10 if length not given)
+      + `{{$randomName}}`
       + `{{$timestamp [offset option]}}`
       + `{{$datetime rfc1123|iso8601 [offset option]}}`
       + `{{$localDatetime rfc1123|iso8601 [offset option]}}`

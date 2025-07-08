@@ -59,6 +59,7 @@ export class RequestController {
 
         // parse http request
         const httpRequest = await RequestParserFactory.createRequestParser(text, settings).parseHttpRequest(name);
+        Logger.verbose("Sending query to:", [httpRequest.method, httpRequest.url])
 
         await this.runCore(httpRequest, settings, document);
     }

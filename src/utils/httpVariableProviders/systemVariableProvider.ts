@@ -16,6 +16,7 @@ import { CALLBACK_PORT, OidcClient } from '../auth/oidcClient';
 import { HttpClient } from '../httpClient';
 import { EnvironmentVariableProvider } from './environmentVariableProvider';
 import { HttpVariable, HttpVariableContext, HttpVariableProvider } from './httpVariableProvider';
+import { randomAlpha, randomName } from '../randomValues';
 
 const uuidv4 = require('uuid/v4');
 
@@ -32,6 +33,7 @@ export class SystemVariableProvider implements HttpVariableProvider {
     private readonly datetimeRegex: RegExp = new RegExp(`\\${Constants.DateTimeVariableName}\\s(rfc1123|iso8601|\'.+\'|\".+\")(?:\\s(\\-?\\d+)\\s(y|Q|M|w|d|h|m|s|ms))?`);
     private readonly localDatetimeRegex: RegExp = new RegExp(`\\${Constants.LocalDateTimeVariableName}\\s(rfc1123|iso8601|\'.+\'|\".+\")(?:\\s(\\-?\\d+)\\s(y|Q|M|w|d|h|m|s|ms))?`);
     private readonly randomIntegerRegex: RegExp = new RegExp(`\\${Constants.RandomIntVariableName}\\s(\\-?\\d+)\\s(\\-?\\d+)`);
+    private readonly randomAlphaRegex: RegExp = new RegExp(`\\${Constants.RandomAlphaVariableName}\\s(\\d+)`);
     private readonly processEnvRegex: RegExp = new RegExp(`\\${Constants.ProcessEnvVariableName}\\s(\\%)?(\\w+)`);
 
     private readonly dotenvRegex: RegExp = new RegExp(`\\${Constants.DotenvVariableName}\\s(\\%)?([\\w-.]+)`);
@@ -59,6 +61,8 @@ export class SystemVariableProvider implements HttpVariableProvider {
         this.registerLocalDateTimeVariable();
         this.registerGuidVariable();
         this.registerRandomIntVariable();
+        this.registerRandomAlphaVariable();
+        this.registerRandomNameVariable();
         this.registerProcessEnvVariable();
         this.registerDotenvVariable();
         this.registerAadTokenVariable();
@@ -168,6 +172,25 @@ export class SystemVariableProvider implements HttpVariableProvider {
 
             return { warning: ResolveWarningMessage.IncorrectRandomIntegerVariableFormat };
         });
+    }
+    private registerRandomAlphaVariable() {
+        this.resolveFuncs.set(Constants.RandomAlphaVariableName, async name => {
+            const groups = this.randomAlphaRegex.exec(name);
+            if (groups !== null && groups.length === 2) {
+                const [, length] = groups;
+                const lengthNum = Number(length);
+                if (0 < lengthNum) {
+                    return { value: randomAlpha(lengthNum) };
+                }
+            } else if (groups === null) {
+                return { value: randomAlpha(10) };
+            }
+
+            return { warning: ResolveWarningMessage.IncorrectRandomAlphaVariableFormat };
+        });
+    }
+    private registerRandomNameVariable() {
+        this.resolveFuncs.set(Constants.RandomNameVariableName, async () => ({ value: randomName()}));
     }
     private registerProcessEnvVariable() {
         this.resolveFuncs.set(Constants.ProcessEnvVariableName, async name => {

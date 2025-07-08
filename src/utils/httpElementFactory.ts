@@ -119,6 +119,18 @@ export class HttpElementFactory {
             Constants.RandomIntDescription,
             new SnippetString(`{{$\${name:${Constants.RandomIntVariableName.slice(1)}} \${1:min} \${2:max}}}`)));
         originalElements.push(new HttpElement(
+            Constants.RandomAlphaVariableName,
+            ElementType.SystemVariable,
+            null,
+            Constants.RandomAlphaDescription,
+            new SnippetString(`{{$\${name:${Constants.RandomAlphaVariableName.slice(1)}} \${1:length}}}`)));
+        originalElements.push(new HttpElement(
+            Constants.RandomNameVariableName,
+            ElementType.SystemVariable,
+            null,
+            Constants.RandomNameDescription,
+            new SnippetString(`{{$\${name:${Constants.RandomNameVariableName.slice(1)}}}}`)));
+        originalElements.push(new HttpElement(
             Constants.ProcessEnvVariableName,
             ElementType.SystemVariable,
             null,
