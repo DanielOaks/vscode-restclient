@@ -1,9 +1,12 @@
+import { window } from 'vscode';
+import * as path from 'path';
 import * as Constants from '../../common/constants';
 import { EnvironmentController } from '../../controllers/environmentController';
 import { SystemSettings } from '../../models/configurationSettings';
 import { ResolveErrorMessage } from '../../models/httpVariableResolveResult';
 import { VariableType } from '../../models/variableType';
 import { HttpVariable, HttpVariableProvider } from './httpVariableProvider';
+import { JsonFileUtility } from '../jsonFileUtility';
 
 export class EnvironmentVariableProvider implements HttpVariableProvider {
     private static _instance: EnvironmentVariableProvider;
@@ -48,11 +51,19 @@ export class EnvironmentVariableProvider implements HttpVariableProvider {
             environmentName = EnvironmentController.sharedEnvironmentName;
         }
         const variables = this._settings.environmentVariables;
-        const currentEnvironmentVariables = variables[environmentName];
-        const sharedEnvironmentVariables = variables[EnvironmentController.sharedEnvironmentName];
+        let currentEnvironmentVariables = variables[environmentName];
+        let sharedEnvironmentVariables = variables[EnvironmentController.sharedEnvironmentName];
+
+        const activeEnvironmentFile = window.activeTextEditor ? path.join(path.dirname(window.activeTextEditor.document.fileName), 'http-client.env.json') : undefined;
+        const activeEnvironmentFileVariables = await JsonFileUtility.deserializeFromFile<{ [key: string]: { [key: string]: string } }>(activeEnvironmentFile || '', {});
+        const currentActiveEnvironmentFileVariables = activeEnvironmentFileVariables[environmentName];
+        const sharedActiveEnvironmentFileVariables = activeEnvironmentFileVariables[EnvironmentController.sharedEnvironmentName];
 
         // Resolve mappings from shared environment
         this.mapEnvironmentVariables('shared', sharedEnvironmentVariables, sharedEnvironmentVariables);
+        this.mapEnvironmentVariables('shared', sharedActiveEnvironmentFileVariables, sharedActiveEnvironmentFileVariables);
+        sharedEnvironmentVariables = {...sharedEnvironmentVariables, ...sharedActiveEnvironmentFileVariables}
+        currentEnvironmentVariables = {...currentEnvironmentVariables, ...currentActiveEnvironmentFileVariables}
         this.mapEnvironmentVariables('shared', currentEnvironmentVariables, sharedEnvironmentVariables);
 
         // Resolve mappings from current environment

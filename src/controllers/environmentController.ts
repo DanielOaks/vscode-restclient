@@ -1,9 +1,12 @@
 import { EventEmitter, QuickPickItem, window } from 'vscode';
+import * as path from 'path';
 import * as Constants from '../common/constants';
 import { SystemSettings } from '../models/configurationSettings';
 import { trace } from "../utils/decorator";
 import { EnvironmentStatusEntry } from '../utils/environmentStatusBarEntry';
 import { UserDataManager } from '../utils/userDataManager';
+import Logger from '../logger';
+import { JsonFileUtility } from '../utils/jsonFileUtility';
 
 type EnvironmentPickItem = QuickPickItem & { name: string };
 
@@ -34,8 +37,21 @@ export class EnvironmentController {
     @trace('Switch Environment')
     public async switchEnvironment() {
         // Add no environment at the top
+        let environmentNames = Object.keys(this.settings.environmentVariables)
+
+        const filesToLoadEnvVariablesFrom = Array.from(new Set(
+            window.visibleTextEditors
+                .map(editor => path.dirname(editor.document.fileName))
+                .filter(folder => folder !== '.')
+                .map(folder => path.join(folder, 'http-client.env.json'))));
+        Logger.info('Loading extra http-client.env.json files from:', filesToLoadEnvVariablesFrom)
+        for (const envFilename of filesToLoadEnvVariablesFrom) {
+            const environments = await JsonFileUtility.deserializeFromFile<{ [key: string]: { [key: string]: string } }>(envFilename, {});
+            environmentNames.push(...Object.keys(environments));
+        }
+
         const userEnvironments: EnvironmentPickItem[] =
-            Object.keys(this.settings.environmentVariables)
+            Array.from(new Set(environmentNames))
                 .filter(name => name !== EnvironmentController.sharedEnvironmentName)
                 .map(name => ({
                     name,
