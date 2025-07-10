@@ -23,6 +23,7 @@ import { RequestVariableHoverProvider } from './providers/requestVariableHoverPr
 import { AadTokenCache } from './utils/aadTokenCache';
 import { ConfigurationDependentRegistration } from './utils/dependentRegistration';
 import { UserDataManager } from './utils/userDataManager';
+import { ApiTreeProvider } from './providers/apiTreeProvider';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -85,6 +86,9 @@ export async function activate(context: ExtensionContext) {
     context.subscriptions.push(languages.registerDefinitionProvider(documentSelector, new RequestVariableDefinitionProvider()));
     context.subscriptions.push(languages.registerReferenceProvider(documentSelector, new FileVariableReferenceProvider()));
     context.subscriptions.push(languages.registerDocumentSymbolProvider(documentSelector, new HttpDocumentSymbolProvider()));
+
+    const treeDataProvider = new ApiTreeProvider();
+    context.subscriptions.push(window.createTreeView('apiExplorerDo', { treeDataProvider }));
 
     const diagnosticsProvider = new CustomVariableDiagnosticsProvider();
     context.subscriptions.push(diagnosticsProvider);

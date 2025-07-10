@@ -2,7 +2,7 @@
   "name": "rest-client-do",
   "displayName": "REST Client (do)",
   "description": "REST Client (do) for Visual Studio Code",
-  "version": "0.27.2",
+  "version": "0.27.3",
   "publisher": "DanielOaks",
   "author": {
     "name": "Daniel Oaks",
@@ -43,6 +43,14 @@
   ],
   "main": "./dist/extension",
   "contributes": {
+    "views": {
+      "explorer": [
+        {
+          "id": "apiExplorerDo",
+          "name": "API Explorer"
+        }
+      ]
+    },
     "languages": [
       {
         "id": "http",
