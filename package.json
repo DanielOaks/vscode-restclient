@@ -747,6 +747,6 @@
     "uuid": "^3.3.2",
     "xmldom": "^0.6.0",
     "xpath": "^0.0.34",
-    "yargs-parser": "^21.1.1"
+    "yargs-parser": "^22.0.0"
   }
 }
